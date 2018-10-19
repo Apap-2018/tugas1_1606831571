@@ -225,45 +225,76 @@ public class PegawaiController {
         model.addAttribute("listProvinsi", provinsiService.getProvinsiList());
 		return "add-pegawai";
 	}
-	
-	@RequestMapping("/jabatan/ubah")
-	private String ubahJabatan(@RequestParam(value="idJabatan", required = true) Long id, Model model) {
-		JabatanModel jabatan = jabatanService.getJabatanDetailById(id);
-		if (jabatan==null) {
-			return "haha";
+	@RequestMapping("/pegawai/ubah")
+	private String editPegawai(@RequestParam(value="nip", required = true) String nip, Model model) {
+		PegawaiModel pegawai = pegawaiService.getPegawaiDetailByNip(nip);
+		if (pegawai==null) {
+			return "404";
 		}
-		else {
-			model.addAttribute("jabatan", jabatan);
+		if(pegawai.getJabatanList().size()==0) {
+			pegawai.getJabatanList().add(new JabatanModel());
 		}
-		return "edit-jabatan";
+		model.addAttribute("pegawai", pegawai);
+		model.addAttribute("listProvinsi", provinsiService.getProvinsiList());
+		model.addAttribute("listInstansi", instansiService.getInstansiList());
+		model.addAttribute("listJabatan", jabatanService.getListJabatan());
+		return "ubah-pegawai";
 	}
 	
-	@RequestMapping(value="/jabatan/ubah",method=RequestMethod.POST)
-	private String ubahJabatanSubmit(@ModelAttribute JabatanModel jabatan,Model model) {
-		jabatanService.addJabatan(jabatan);
-		model.addAttribute("pesan", "Jabatan Berhasil Diubah");
-		return "add";
-	}
-	
-	@RequestMapping(value="/jabatan/hapus",method=RequestMethod.POST)
-	private String hapusJabatan(@RequestParam(value="idJabatan", required = true) Long id, Model model) {
-		JabatanModel jabatan = jabatanService.getJabatanDetailById(id);
-		if (jabatan==null) {
-			return "haha";
-		}
-		else {
-			if (jabatan.getPegawaiList().size()==0) {
-				jabatanService.deleteJabatan(jabatan);
-				model.addAttribute("pesan", "Jabatan Berhasil Dihapus");
-				return "add";
-			}
-			else {
-				return "haha";
-			}
-		}
+	@PostMapping(value = "/pegawai/ubah", params= {"pegawaiSubmit"})
+    public String submitEditPegawai(@ModelAttribute PegawaiModel pegawai,Model model) {
+		pegawaiService.addPegawai(pegawai);
+		String nip = "";
 		
-	}
+		nip += pegawai.getInstansi().getId();
+		
+		String[] tglLahir = pegawai.getTanggalLahir().toString().split("-");
+		String tglLahirString = tglLahir[2] + tglLahir[1] + tglLahir[0].substring(2, 4);
+		nip += tglLahirString;
+
+		nip += pegawai.getTahunMasuk();
+
+		int counterSama = 1;
+		for (PegawaiModel pegawaiInstansi:pegawai.getInstansi().getPegawaiInstansi()) {
+			if (pegawaiInstansi.getTahunMasuk().equals(pegawai.getTahunMasuk()) && pegawaiInstansi.getTanggalLahir().equals(pegawai.getTanggalLahir())) {
+				counterSama += 1;
+			}	
+		}
+		nip += "0" + counterSama;
+
+		for (JabatanModel jabatan:pegawai.getJabatanList()) {
+			System.out.println(jabatan.getNama());
+		}
+		pegawai.setNip(nip);
+		pegawaiService.addPegawai(pegawai);
+		model.addAttribute("pesan", "Pegawai NIP "+nip+" berhasil diubah");
+        return "add";
+    }
 	
+	@PostMapping(value = "/pegawai/ubah", params= {"addRow"})
+    public String addRowJabatanEdit(@ModelAttribute PegawaiModel pegawai, BindingResult bindingResult, Model model) {
+    	if (pegawai.getJabatanList()== null) {
+			pegawai.setJabatanList(new ArrayList<JabatanModel>());
+		}
+    	pegawai.getJabatanList().add(new JabatanModel());
+    	model.addAttribute("pegawai", pegawai);
+    	System.out.println(pegawai.getJabatanList().size());
+        model.addAttribute("listJabatan", jabatanService.getListJabatan());
+        model.addAttribute("listInstansi", instansiService.getInstansiList());
+        model.addAttribute("listProvinsi", provinsiService.getProvinsiList());
+		return "ubah-pegawai";
+    }
+	
+	@PostMapping(value="/pegawai/ubah",params= {"deleteRow"})
+	private String deleteRowJabatanUbah(@ModelAttribute PegawaiModel pegawai,BindingResult bindingResult, Model model, HttpServletRequest req) {
+		final Integer rowId = Integer.valueOf(req.getParameter("deleteRow"));
+	    pegawai.getJabatanList().remove(rowId.intValue());
+	    model.addAttribute("pegawai", pegawai);
+	    model.addAttribute("listJabatan", jabatanService.getListJabatan());
+	    model.addAttribute("listInstansi", instansiService.getInstansiList());
+        model.addAttribute("listProvinsi", provinsiService.getProvinsiList());
+		return "ubah-pegawai";
+	}
 	
 	
 	
