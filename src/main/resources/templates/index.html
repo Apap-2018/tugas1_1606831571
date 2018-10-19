@@ -7,15 +7,22 @@
  </head>
 	<body>
   <nav th:replace="fragments/fragment :: navbar"></nav>
-		<h2>Sistem Informasi Kepegawaian</h2>
-		<h2> Selamat Datang di Sistem Informasi Kepegawaian</h2>
-		<h2>Lihat Data Pegawai menggunakan NIP</h2>
-		
+		<h3>Sistem Informasi Kepegawaian</h3>
+		<h8> Selamat Datang di Sistem Informasi Kepegawaian</h8>
+		<hr></hr>
+		<h3>Lihat Data Pegawai menggunakan NIP</h3>
 		<form th:action="@{/pegawai}" method="GET">
 			<input type="text" name="nip" />
 			<br><br>
 			<button type="submit">Lihat</button>
 		</form>
-		
+		<h3>Lihat Detail Jabatan</h3>
+		<form th:action="@{/jabatan/view}" method="GET">
+			<select name="idJabatan">
+			  <option th:each="jabatanList : ${listJabatan}" th:value="${jabatanList.id}" th:text="${jabatanList.nama}"></option>
+			</select>
+			<br><br>
+			<button type="submit">Lihat</button>
+			</form>
 	</body>
 </html>
