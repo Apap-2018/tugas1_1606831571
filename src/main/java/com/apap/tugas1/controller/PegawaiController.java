@@ -40,7 +40,7 @@ public class PegawaiController {
 	private String viewPegawai(@RequestParam(value="nip", required = true) String nip, Model model) {
 		PegawaiModel pegawai = pegawaiService.getPegawaiDetailByNip(nip);
 		if (pegawai==null) {
-			return "haha";
+			return "tidak ada pegawai";
 		}
 		else {
 			model.addAttribute("pegawai", pegawai);
