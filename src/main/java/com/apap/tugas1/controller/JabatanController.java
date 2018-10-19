@@ -69,7 +69,7 @@ public class JabatanController {
 			return "jabatan-delete";
 		}
 	}
-	
+	//FITUR 7
 	@RequestMapping(value="/jabatan/ubah",method=RequestMethod.GET)
 	private String ubahJabatan(@RequestParam(value="id") Long id, Model model) {
 		JabatanModel jabatan = jabatanService.getJabatanDetailById(id);
@@ -88,6 +88,11 @@ public class JabatanController {
 		model.addAttribute("listJabatan", archive);
 		return "viewall-Jabatan";	
 	}
+	
+	
+	
+	
+	
 	
 	
 }

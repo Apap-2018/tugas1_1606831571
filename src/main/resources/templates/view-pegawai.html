@@ -49,6 +49,10 @@
 		        <td th:text="'Rp. '+${gajiPegawai}"></td>
 		    </tr>
 		</table>
+		<form th:action="@{'/jabatan/ubah'}" th:method="POST" >
+    	<input type="hidden" name="idJabatan" th:value="${jabatan.id}" />
+    	<button value="submit" class="btn btn-danger">Ubah</button>
+		</form>
 
 		
 	</body>
