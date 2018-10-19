@@ -51,7 +51,11 @@
 		    </tr>
 		      -->
 		</table>
-		<button>Ubah</button>
+		
+		<form th:action="@{'/jabatan/ubah'}" th:method="GET" >
+    	 <input type="hidden" name="id" th:value="${jabatan.id}" />
+    	<button value="submit" class="btn btn-danger">Ubah</button>
+		</form>	
 		
 		<form th:action="@{'/jabatan/delete'}" th:method="POST" >
     	<input type="hidden" name="idJabatan" th:value="${jabatan.id}" />

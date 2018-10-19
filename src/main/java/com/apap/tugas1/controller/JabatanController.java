@@ -65,7 +65,17 @@ public class JabatanController {
 			return "jabatan-delete";
 		}
 	}
-
-
-
+	
+	@RequestMapping(value="/jabatan/ubah",method=RequestMethod.GET)
+	private String ubahJabatan(@RequestParam(value="id") Long id, Model model) {
+		JabatanModel jabatan = jabatanService.getJabatanDetailById(id);
+		model.addAttribute("jabatan", jabatan);
+		return "ubah-jabatan";
+	}
+	@RequestMapping(value="/jabatan/ubah", method=RequestMethod.POST)
+	private String ubahJabatanSubmit(@ModelAttribute JabatanModel jabatan,Model model) {
+	jabatanService.addJabatan(jabatan);
+		return "ubah-berhasil";
+	}
+	
 }
