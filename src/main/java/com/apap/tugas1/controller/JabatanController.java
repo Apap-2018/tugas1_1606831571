@@ -85,6 +85,9 @@ public class JabatanController {
 	@RequestMapping(value= "/jabatan/viewall", method =RequestMethod.GET)
 	public String viewall (Model model) {
 		ArrayList<JabatanModel> archive = jabatanService.getListJabatan();
+		for (JabatanModel i: archive) {
+			i.setSize(i.getPegawaiList().size());
+		}
 		model.addAttribute("listJabatan", archive);
 		return "viewall-Jabatan";	
 	}
