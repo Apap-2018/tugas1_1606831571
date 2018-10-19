@@ -32,4 +32,11 @@ public class JabatanServiceImpl implements JabatanService {
 		return (ArrayList<JabatanModel>) jabatanDB.findAll();
 	}
 
+	@Override
+	public void deleteJabatan(JabatanModel jabatan) {
+		// TODO Auto-generated method stub
+		jabatanDB.delete(jabatan);
+		
+	}
+
 }

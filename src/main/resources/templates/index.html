@@ -18,7 +18,7 @@
 		</form>
 		<h3>Lihat Detail Jabatan</h3>
 		<form th:action="@{/jabatan/view}" method="GET">
-			<select name="idJabatan">
+			<select name="idJabatan"> 
 			  <option th:each="jabatanList : ${listJabatan}" th:value="${jabatanList.id}" th:text="${jabatanList.nama}"></option>
 			</select>
 			<br><br>
