@@ -1,5 +1,7 @@
 package com.apap.tugas1.controller;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +16,8 @@ import com.apap.tugas1.service.JabatanPegawaiService;
 import com.apap.tugas1.service.JabatanService;
 import com.apap.tugas1.service.PegawaiService;
 import com.apap.tugas1.service.ProvinsiService;
+
+import antlr.collections.List;
 
 @Controller
 public class JabatanController {
@@ -46,7 +50,7 @@ public class JabatanController {
 	private String viewJabatan(@RequestParam(value="idJabatan", required=true ) Long id, Model model) {
 		JabatanModel jabatan = jabatanService.getJabatanDetailById(id);
 		if(jabatan ==  null) {
-			return "jabatan tidak ada";
+			return "nipError";
 		}
 		else {
 			model.addAttribute("jabatan",jabatan);
@@ -77,5 +81,13 @@ public class JabatanController {
 	jabatanService.addJabatan(jabatan);
 		return "ubah-berhasil";
 	}
+	
+	@RequestMapping(value= "/jabatan/viewall", method =RequestMethod.GET)
+	public String viewall (Model model) {
+		ArrayList<JabatanModel> archive = jabatanService.getListJabatan();
+		model.addAttribute("listJabatan", archive);
+		return "viewall-Jabatan";	
+	}
+	
 	
 }

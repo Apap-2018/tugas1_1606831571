@@ -35,11 +35,20 @@ public class PegawaiController {
 	@Autowired
 	private JabatanService jabatanService;
 	
+	
+	
 	@RequestMapping("/")
+//FITUE 2
 	private String index(Model model) {
+		//FITUR 2
 		List<JabatanModel> listJabatan = jabatanService.getListJabatan();
 		model.addAttribute("listJabatan", listJabatan);
-		return "index";
+
+		//FITUR 10
+		List<InstansiModel> listInstansi = instansiService.getInstansiList();
+		model.addAttribute("listInstansi", listInstansi);
+		return "index"; 
+		
 	}
 	//FITUR 1
 	@RequestMapping("/pegawai")
@@ -66,4 +75,32 @@ public class PegawaiController {
 		return "view-pegawai";
 	}
 	
+	@RequestMapping("/pegawai/tertua-termuda")
+	private String pegawaiTertuaTermuda(@RequestParam(value="idInstansi", required = true) Long id, Model model) {
+		InstansiModel instansi = instansiService.getInstansiById(id);
+		if (instansi==null) {
+			return "haha";
+		}
+		else {
+			List<PegawaiModel> pegawais = instansi.getPegawaiInstansi();
+			if (pegawais.isEmpty()) {
+				return "haha";
+			}
+			PegawaiModel tertua = pegawais.get(0);
+			PegawaiModel termuda = pegawais.get(0);
+			for (PegawaiModel pegawai : pegawais) {
+				if (pegawai.getTanggalLahir().compareTo(tertua.getTanggalLahir())<1) {
+					tertua = pegawai;
+				}
+				if (pegawai.getTanggalLahir().compareTo(termuda.getTanggalLahir())>1) {
+					termuda = pegawai;
+				}
+			}
+			model.addAttribute("tertua", tertua);
+			model.addAttribute("termuda",termuda);
+			return "tertua-termuda";
+		}
+	}
+	
 }
+
